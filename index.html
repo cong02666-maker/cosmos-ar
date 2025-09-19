@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>コスモスくんAR撮影</title>
+<title>コスモスくんAR撮影（iPhone対応）</title>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
   #camera { display: none; }
@@ -18,12 +18,22 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
+  #snapshot {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    max-width: 200px;
+    border: 2px solid #ccc;
+    display: none;
+    z-index: 20;
+  }
 </style>
 </head>
 <body>
 <video id="camera" autoplay playsinline></video>
 <canvas id="canvas"></canvas>
 <button id="btn">撮影</button>
+<img id="snapshot" alt="撮影画像">
 <img id="cosmos" src="cosmoskun.PNG" style="display:none;">
 
 <script>
@@ -31,6 +41,7 @@ const video = document.getElementById('camera');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const btn = document.getElementById('btn');
+const snapshotImg = document.getElementById('snapshot');
 const cosmos = document.getElementById('cosmos');
 
 // カメラ起動
@@ -39,8 +50,9 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
   video.srcObject = stream;
   video.onloadedmetadata = () => {
     video.play();
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // canvasを動画の2倍解像度に設定して高画質化
+    canvas.width = video.videoWidth * 2;
+    canvas.height = video.videoHeight * 2;
     drawFrame();
   };
 })
@@ -50,19 +62,18 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
 function drawFrame() {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
   // コスモスくんを右下に固定
-  const w = 150; // 幅固定
+  const w = 300; // 高解像度用幅
   const h = w * (cosmos.naturalHeight / cosmos.naturalWidth);
-  ctx.drawImage(cosmos, canvas.width - w - 20, canvas.height - h - 20, w, h);
+  ctx.drawImage(cosmos, canvas.width - w - 40, canvas.height - h - 40, w, h);
   requestAnimationFrame(drawFrame);
 }
 
 // 撮影ボタン
 btn.addEventListener('click', () => {
   const dataURL = canvas.toDataURL('image/png');
-  const link = document.createElement('a');
-  link.href = dataURL;
-  link.download = 'cosmos_photo.png';
-  link.click();
+  snapshotImg.src = dataURL;
+  snapshotImg.style.display = 'block';
+  alert("画像が表示されました。\n長押しでカメラロールに保存できます。");
 });
 </script>
 </body>
