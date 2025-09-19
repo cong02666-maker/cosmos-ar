@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>コスモスくんARスポット</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+  }
+  #camera {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #cosmos {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px; /* 大きめに表示 */
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<video id="camera" autoplay playsinline></video>
+<img id="cosmos" src="cosmoskun.png" alt="コスモスくん">
+
+<script>
+  // 背面カメラを取得
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+  .then(stream => {
+    document.getElementById('camera').srcObject = stream;
+  })
+  .catch(err => {
+    alert("カメラが使えません: " + err);
+  });
+</script>
+</body>
+</html>
