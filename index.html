@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>コスモスくんAR撮影（iPhone対応）</title>
+<title>コスモスくんAR撮影（大きめ）</title>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
   #camera { display: none; }
@@ -61,8 +61,8 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
 // 毎フレーム描画
 function drawFrame() {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  // コスモスくんを右下に固定
-  const w = 300; // 高解像度用幅
+  // コスモスくんを右下に大きめ表示（画面幅の1/3）
+  const w = canvas.width / 3; 
   const h = w * (cosmos.naturalHeight / cosmos.naturalWidth);
   ctx.drawImage(cosmos, canvas.width - w - 40, canvas.height - h - 40, w, h);
   requestAnimationFrame(drawFrame);
