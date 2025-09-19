@@ -2,17 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>コスモスくんARフォトスポット</title>
+    <title>コスモスくんAR簡易版</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.2.1/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
     <style>
       body, html { margin: 0; overflow: hidden; }
     </style>
   </head>
   <body>
     <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-      <!-- マーカーなしで画面中央に常に表示 -->
-      <a-image src="cosmoskun.png" position="0 0 -3" scale="2 2 2"></a-image>
+      <!-- PNGをカメラ前に固定表示 -->
+      <a-image src="cosmoskun.png" position="0 1.5 -2" rotation="0 0 0" scale="1.5 1.5 1.5"></a-image>
       <a-entity camera></a-entity>
     </a-scene>
   </body>
