@@ -1,21 +1,59 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>コスモスくんAR</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <style>
-      body { margin: 0; overflow: hidden; }
-      #cosmos { width: 1; height: 1; } /* 1mスケール */
-    </style>
-  </head>
-  <body>
-    <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
-      <!-- カメラ -->
-      <a-entity camera></a-entity>
-      <!-- PNG表示 -->
-      <a-image src="cosmoskun.PNG" position="0 0 -2" width="1" height="1"></a-image>
-    </a-scene>
-  </body>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>コスモスくんAR撮影</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+  #camera { display: none; } /* video はcanvasに描画するので非表示 */
+  #canvas { width: 100%; height: 100%; display: block; }
+  #btn { position: absolute; top: 10px; left: 10px; z-index: 10; font-size: 18px; }
+</style>
+</head>
+<body>
+<video id="camera" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
+<button id="btn">撮影</button>
+<img id="cosmos" src="cosmoskun.PNG" style="display:none;">
+
+<script>
+const video = document.getElementById('camera');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const btn = document.getElementById('btn');
+const cosmos = document.getElementById('cosmos');
+
+// カメラ起動
+navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+.then(stream => {
+  video.srcObject = stream;
+  video.onloadedmetadata = () => {
+    video.play();
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    drawFrame();
+  };
+})
+.catch(err => alert('カメラを起動できません: ' + err));
+
+// 毎フレーム描画
+function drawFrame() {
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  // コスモスくんを右下に表示
+  const w = canvas.width / 4; // 幅は動画の1/4
+  const h = w * (cosmos.naturalHeight / cosmos.naturalWidth);
+  ctx.drawImage(cosmos, canvas.width - w - 20, canvas.height - h - 20, w, h);
+  requestAnimationFrame(drawFrame);
+}
+
+// 撮影ボタン
+btn.addEventListener('click', () => {
+  const dataURL = canvas.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = 'cosmos_photo.png';
+  link.click();
+});
+</script>
+</body>
 </html>
