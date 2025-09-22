@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>コスモスくんAR撮影（フレーム一体版）</title>
+<title>コスモスくんAR撮影（透過フレーム対応）</title>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
   #camera { display: none; }
@@ -60,6 +60,7 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
 
 // 毎フレーム描画
 function drawFrame() {
+  // 動画描画
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   // コスモスくん＋フレーム一体PNGを中央に表示
@@ -67,7 +68,7 @@ function drawFrame() {
   const h = w * (cosmos.naturalHeight / cosmos.naturalWidth);
   const x = (canvas.width - w) / 2;
   const y = (canvas.height - h) / 2;
-  ctx.drawImage(cosmos, x, y, w, h);
+  ctx.drawImage(cosmos, x, y, w, h); // 透過部分は動画が透ける
 
   requestAnimationFrame(drawFrame);
 }
